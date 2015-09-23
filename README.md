@@ -15,10 +15,10 @@ Usage: vox <option>
 
 Option:
     launch|quit             Launch or quit VOX
-    play|pause              Play or pause the current track
+    play|pause|resume       Play or pause the current track
     rewind|forward          Skip back or ahead in the current track
     fastrewind|fastforward  Skip further back or ahead in the current track
-    next|previous|resume    Play the next or previous track
+    next|previous           Play the next or previous track
     vol|volume [up|down]    Increase or decrease the volume
 ```
 
