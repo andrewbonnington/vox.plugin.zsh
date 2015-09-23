@@ -2,7 +2,7 @@
 #          FILE:  vox.plugin.zsh
 #   DESCRIPTION:  oh-my-zsh plugin file to control Vox.
 #        AUTHOR:  Andrew Bonnington (https://github.com/andrewbonnington)
-#       VERSION:  1.0
+#       VERSION:  1.1.0
 # ------------------------------------------------------------------------------
 
 function vox() {
@@ -51,10 +51,10 @@ function vox() {
       echo "\t-v, --version\tShow version number, then exit"
       echo "\nOption:"
       echo "\tlaunch|quit\t\tLaunch or quit VOX"
-      echo "\tplay|pause\t\tPlay or pause the current track"
+      echo "\tplay|pause|resume\t\tPlay or pause the current track"
       echo "\trewind|forward\t\tSkip back or ahead in the current track"
       echo "\tfastrewind|fastforward\tSkip further back or ahead in the current track"
-      echo "\tnext|previous|resume\tPlay the next or previous track"
+      echo "\tnext|previous\tPlay the next or previous track"
       echo "\tvol|volume [up|down]\tIncrease or decrease the volume"
       return 0
       ;;
