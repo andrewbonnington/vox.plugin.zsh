@@ -5,7 +5,7 @@
 #       VERSION:  1.1.0
 # ------------------------------------------------------------------------------
 
-function _now_playing_info() {
+function _track_info() {
   local info="$(
     osascript 2>/dev/null <<EOF
       tell application "VOX"
@@ -74,7 +74,7 @@ function vox() {
         esac
       ;;
     status)
-      _now_playing_info
+      _track_info
       return 0
       ;;
     -v|--version)
