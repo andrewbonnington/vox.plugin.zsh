@@ -41,12 +41,10 @@ function _vox_get_volume() {
   local vol=$(
     osascript 2>/dev/null <<EOF
       on ceil(x)
-        set y to 0
+        set y to x div 1
         
-        if x > 0 then
-          set y to (x div 1) + 1
-        else if x < 0 then
-          set y to x div 1
+        if x > 0 and x mod 1 is not 0 then
+          set y to y + 1
         end if
         
         return y
@@ -54,9 +52,7 @@ function _vox_get_volume() {
 
       tell application "VOX" to set vol to player volume
 
-      if vol mod 10 is not 0 then
-        set vol to ceil(vol / 10) * 10
-      end if
+      set vol to ceil(vol / 10) * 10
 
       return vol div 10
 EOF
