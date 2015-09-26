@@ -5,7 +5,7 @@
 #       VERSION:  1.1.0
 # ------------------------------------------------------------------------------
 
-function _track_info() {
+function _vox_track_info() {
   local info="$(
     osascript 2>/dev/null <<EOF
       tell application "VOX"
@@ -37,7 +37,7 @@ EOF
   echo "$info"
 }
 
-function _get_volume() {
+function _vox_get_volume() {
   local vol=$(
     osascript 2>/dev/null <<EOF
       on ceil(x)
@@ -64,16 +64,16 @@ EOF
   echo "$vol"
 }
 
-function _set_volume() {
+function _vox_set_volume() {
   if [ "$1" -ge 0 -a "$1" -le 10 ]
   then
-    local curr_vol=$( _get_volume )
+    local curr_vol=$( _vox_get_volume )
 
     if [ "$1" = 0 ]
     then
       if [ "$curr_vol" -gt 0 ]
       then
-        _kill_volume
+        _vox_kill_volume
       fi
       return 0
     fi
@@ -106,8 +106,8 @@ EOF
   fi
 }
 
-function _kill_volume() {
-  local vol=$( _get_volume )
+function _vox_kill_volume() {
+  local vol=$( _vox_get_volume )
 
   osascript 2>/dev/null <<EOF
     set vol to $vol
@@ -122,27 +122,27 @@ function _kill_volume() {
 EOF
 }
 
-function _mute() {
-  local vol=$( _get_volume )
+function _vox_mute() {
+  local vol=$( _vox_get_volume )
 
   if [ "$vol" -gt 0 ]
   then
     echo "$vol" > /tmp/voxvol.dat
-    _kill_volume
+    _vox_kill_volume
   else
     print "VOX is already muted"
   fi
 }
 
-function _unmute() {
-  local vol=$( _get_volume )
+function _vox_unmute() {
+  local vol=$( _vox_get_volume )
   
   if [ "$vol" = 0 ]
   then
     if [ -f "/tmp/voxvol.dat" ]
     then
       vol=`cat /tmp/voxvol.dat`
-      _set_volume "$vol"
+      _vox_set_volume "$vol"
     else
       print "VOX isn't muted"
     fi
@@ -185,15 +185,15 @@ function vox() {
         esac
       ;;
     mute)
-      _mute
+      _vox_mute
       return 0
       ;;
     unmute)
-      _unmute
+      _vox_unmute
       return 0
       ;;
     status)
-      _track_info
+      _vox_track_info
       return 0
       ;;
     -v|--version)
