@@ -2,7 +2,7 @@
 #          FILE:  vox.plugin.zsh
 #   DESCRIPTION:  oh-my-zsh plugin file to control Vox.
 #        AUTHOR:  Andrew Bonnington (https://github.com/andrewbonnington)
-#       VERSION:  1.1.0
+#       VERSION:  1.2.0
 # ------------------------------------------------------------------------------
 
 function _vox_track_info() {
