@@ -2,7 +2,7 @@
 #          FILE:  vox.plugin.zsh
 #   DESCRIPTION:  oh-my-zsh plugin file to control Vox.
 #        AUTHOR:  Andrew Bonnington (https://github.com/andrewbonnington)
-#       VERSION:  1.2.0
+#       VERSION:  1.2.1
 # ------------------------------------------------------------------------------
 
 function _vox_track_info() {
@@ -145,13 +145,24 @@ function _vox_unmute() {
   fi
 }
 
+function _vox_resume() {
+  osascript 2>/dev/null <<EOF
+    tell application "VOX" to set the state to player state
+
+    if state is 0 then
+      tell application "VOX" to play
+    end if
+EOF
+}
+
 function vox() {
   local opt=$1
   case "$opt" in
     launch|play|pause|next|previous|quit)
       ;;
     resume)
-      opt="play"
+      _vox_resume
+      return 0
       ;;
     rewind)
       opt="rewindBackward"
