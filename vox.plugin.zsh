@@ -2,7 +2,7 @@
 #          FILE:  vox.plugin.zsh
 #   DESCRIPTION:  oh-my-zsh plugin file to control Vox.
 #        AUTHOR:  Andrew Bonnington (https://github.com/andrewbonnington)
-#       VERSION:  1.2.1
+#       VERSION:  1.3.0
 # ------------------------------------------------------------------------------
 
 function _vox_track_info() {
@@ -40,21 +40,13 @@ EOF
 function _vox_get_volume() {
   local vol=$(
     osascript 2>/dev/null <<EOF
-      on ceil(x)
-        set y to x div 1
-        
-        if x > 0 and x mod 1 is not 0 then
-          set y to y + 1
-        end if
-        
-        return y
-      end ceil
-
       tell application "VOX" to set vol to player volume
 
-      set vol to ceil(vol / 10) * 10
+      set vol2 to round (vol / 10)
 
-      return vol div 10
+      if vol is not 0 and vol2 is 0 then set vol2 to 0.1
+
+      return vol2
 EOF
   )
   echo "$vol"
@@ -72,6 +64,11 @@ function _vox_set_volume() {
         _vox_kill_volume
       fi
       return 0
+    fi
+
+    if [ "$curr_vol" = 0.1 ]
+    then
+      curr_vol=0
     fi
 
     osascript 2>/dev/null <<EOF
@@ -99,6 +96,7 @@ function _vox_set_volume() {
 EOF
   else
      print "Value must be between 0 and 10."
+     return 1
   fi
 }
 
@@ -109,7 +107,7 @@ function _vox_kill_volume() {
     set vol to $vol
 
     if vol > 0 then
-      set volSteps to vol
+      set volSteps to vol + 1
       
       repeat volSteps times
         tell application "VOX" to decreaseVolume
@@ -123,6 +121,10 @@ function _vox_mute() {
 
   if [ "$vol" -gt 0 ]
   then
+    if [ "$vol" = 0.1 ]
+    then
+      vol="1" 
+    fi
     echo "$vol" > /tmp/voxvol.dat
     _vox_kill_volume
   else
@@ -132,7 +134,7 @@ function _vox_mute() {
 
 function _vox_unmute() {
   local vol=$( _vox_get_volume )
-  
+
   if [ "$vol" = 0 ]
   then
     if [ -f "/tmp/voxvol.dat" ]
@@ -185,8 +187,12 @@ function vox() {
         up)
           opt="increasVolume"
           ;;
+        [0-9]|10)
+          _vox_set_volume "$state"
+          return 0
+          ;;
         ""|*)
-          print "Usage: vox vol|volume [up|down]. Invalid option."
+          print "Usage: vox vol|volume [up|down] or vox vol|volume [0-10]. Invalid option."
           return 1
           ;;
         esac
@@ -204,7 +210,7 @@ function vox() {
       return 0
       ;;
     -v|--version)
-      print "1.2.0"
+      print "1.3.0"
       return 0
       ;;
     ""|-h|--help)
@@ -218,6 +224,7 @@ function vox() {
       echo "\tfastrewind|fastforward\tSkip further back or ahead in the current track"
       echo "\tnext|previous\t\tPlay the next or previous track"
       echo "\tvol|volume [up|down]\tIncrease or decrease the volume"
+      echo "\tvol|volume #\t\tSet volume to # [0-10]"
       echo "\tmute|unmute\t\tToggle volume"
       echo "\tstatus\t\t\tShow current track details"
       return 0
