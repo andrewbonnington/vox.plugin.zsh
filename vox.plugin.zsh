@@ -96,6 +96,7 @@ function _vox_set_volume() {
 EOF
   else
      print "Value must be between 0 and 10."
+     return 1
   fi
 }
 
@@ -175,8 +176,12 @@ function vox() {
         up)
           opt="increasVolume"
           ;;
+        [0-9]|10)
+          _vox_set_volume "$state"
+          return 0
+          ;;
         ""|*)
-          print "Usage: vox vol|volume [up|down]. Invalid option."
+          print "Usage: vox vol|volume [up|down] or vox vol|volume [0-10]. Invalid option."
           return 1
           ;;
         esac
@@ -208,6 +213,7 @@ function vox() {
       echo "\tfastrewind|fastforward\tSkip further back or ahead in the current track"
       echo "\tnext|previous\t\tPlay the next or previous track"
       echo "\tvol|volume [up|down]\tIncrease or decrease the volume"
+      echo "\tvol|volume #\t\tSet volume to # [0-10]"
       echo "\tmute|unmute\t\tToggle volume"
       echo "\tstatus\t\t\tShow current track details"
       return 0
