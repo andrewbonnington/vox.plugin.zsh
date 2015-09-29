@@ -40,21 +40,13 @@ EOF
 function _vox_get_volume() {
   local vol=$(
     osascript 2>/dev/null <<EOF
-      on ceil(x)
-        set y to x div 1
-        
-        if x > 0 and x mod 1 is not 0 then
-          set y to y + 1
-        end if
-        
-        return y
-      end ceil
-
       tell application "VOX" to set vol to player volume
 
-      set vol to ceil(vol / 10) * 10
+      set vol2 to round (vol / 10)
 
-      return vol div 10
+      if vol is not 0 and vol2 is 0 then set vol2 to 0.1
+
+      return vol2
 EOF
   )
   echo "$vol"
@@ -72,6 +64,11 @@ function _vox_set_volume() {
         _vox_kill_volume
       fi
       return 0
+    fi
+
+    if [ "$curr_vol" = 0.1 ]
+    then
+      curr_vol=0
     fi
 
     osascript 2>/dev/null <<EOF
@@ -109,7 +106,7 @@ function _vox_kill_volume() {
     set vol to $vol
 
     if vol > 0 then
-      set volSteps to vol
+      set volSteps to vol + 1
       
       repeat volSteps times
         tell application "VOX" to decreaseVolume
@@ -123,6 +120,10 @@ function _vox_mute() {
 
   if [ "$vol" -gt 0 ]
   then
+    if [ "$vol" = 0.1 ]
+    then
+      vol="1" 
+    fi
     echo "$vol" > /tmp/voxvol.dat
     _vox_kill_volume
   else
@@ -132,7 +133,7 @@ function _vox_mute() {
 
 function _vox_unmute() {
   local vol=$( _vox_get_volume )
-  
+
   if [ "$vol" = 0 ]
   then
     if [ -f "/tmp/voxvol.dat" ]
