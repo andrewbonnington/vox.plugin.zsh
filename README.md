@@ -20,6 +20,7 @@ Options:
     fastrewind|fastforward  Skip further back or ahead in the current track
     next|previous           Play the next or previous track
     vol|volume [up|down]    Increase or decrease the volume
+    vol|volume #            Set volume to # [0-10]
     mute|unmute             Toggle volume
     status                  Show current track details
 ```
