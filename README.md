@@ -56,6 +56,34 @@ git clone https://github.com/andrewbonnington/vox.plugin.zsh ./vox
 
 Enable the plugin by editing your ~/.zshrc file.
 
+## Changelog
+
+### 1.3.0
+
+- Set volume
+
+### 1.2.0
+
+- Mute and unmute volume
+
+### 1.1.0
+
+- Show current track details
+
+### 1.0.0
+ 
+- Launch and quit VOX
+- Play and pause
+- Skip back or ahead in the current track
+- Play the next or previous track
+- Increase or decrease the volume
+
+## Limitations
+
+Due to the limited AppleScript functionality provided by VOX the set volume and mute functionality provided by this script is achieved by increasing/decreasing the volume until the desired volume is obtained. This means that the volume can not be set exactly but should be within &plusmn;5% of the required volume, due to being set in 10% intervals.
+
+Additionally the mute functionality is achieved by storing the current volume in following location `/tmp/voxvol.dat` which is subsequently read when reinstating the volume. If this file is modified or the volume adjusted either using the script or the GUI this feature may not function as expected.
+
 ## License
 
 MIT &copy; Andrew Bonnington
